@@ -4,7 +4,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-import sk.tuke.fpa_tool_ws.dto.AuthRequest;
+import sk.tuke.fpa_tool_ws.dto.request.AuthRequest;
 import sk.tuke.fpa_tool_ws.security.JwtUtil;
 import sk.tuke.fpa_tool_ws.security.detail.CustomUserDetails;
 

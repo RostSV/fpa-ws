@@ -1,4 +1,4 @@
-package sk.tuke.fpa_tool_ws.dto;
+package sk.tuke.fpa_tool_ws.dto.request;
 
 public class AuthRequest {
     private String username;
