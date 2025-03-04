@@ -4,6 +4,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import sk.tuke.fpa_tool_ws.dto.ApiResponse;
 import sk.tuke.fpa_tool_ws.dto.request.AuthRequest;
 import sk.tuke.fpa_tool_ws.security.JwtUtil;
 import sk.tuke.fpa_tool_ws.security.detail.CustomUserDetails;
@@ -21,12 +22,12 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public String login(@RequestBody AuthRequest loginRequest) {
+    public ApiResponse<String> login(@RequestBody AuthRequest loginRequest) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
 
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
 
-        return jwtUtil.generateToken(userDetails);
+        return new ApiResponse<>(200, "Login successful", jwtUtil.generateToken(userDetails));
     }
 }

@@ -32,5 +32,4 @@ public class UserController {
         userService.createUser(dto, password);
         return new ApiResponse<>(200, "User registered successfully", null);
     }
-
 }
