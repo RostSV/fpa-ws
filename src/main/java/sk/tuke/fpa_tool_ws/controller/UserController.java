@@ -1,7 +1,9 @@
 package sk.tuke.fpa_tool_ws.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import sk.tuke.fpa_tool_ws.dto.ApiResponse;
 import sk.tuke.fpa_tool_ws.dto.UserRegistrationRequest;
 import sk.tuke.fpa_tool_ws.model.User;
 import sk.tuke.fpa_tool_ws.service.UserService;
@@ -20,19 +22,21 @@ public class UserController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
-    public Collection<User> getUsers() {
-        return userService.getAllUsers();
+    public ApiResponse<Collection<User>> getUsers() {
+        Collection<User> users =  userService.getAllUsers();
+        return new ApiResponse<>(200, "Users retrieved successfully", users);
     }
 
     @PostMapping("/register")
-    public User registerUser(@RequestBody UserRegistrationRequest request) {
-        return userService.createUser(
+    public ApiResponse<User> registerUser(@Valid @RequestBody UserRegistrationRequest request) {
+        User user =  userService.createUser(
                 request.getUsername(),
                 request.getEmail(),
                 request.getPassword(),
                 request.getRoles()
         );
-    }
 
+        return new ApiResponse<>(200, "User registered successfully", user);
+    }
 
 }
