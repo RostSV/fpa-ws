@@ -1,4 +1,4 @@
-package sk.tuke.fpa_tool_ws.service;
+package sk.tuke.fpa_tool_ws.service.impl;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -6,12 +6,13 @@ import sk.tuke.fpa_tool_ws.dto.UserDto;
 import sk.tuke.fpa_tool_ws.mapper.UserMapper;
 import sk.tuke.fpa_tool_ws.model.User;
 import sk.tuke.fpa_tool_ws.repository.UserRepository;
+import sk.tuke.fpa_tool_ws.service.UserService;
 
 import java.util.Collection;
 import java.util.UUID;
 
 @Service
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService {
 
     private final UserMapper userMapper;
     private final UserRepository userRepository;

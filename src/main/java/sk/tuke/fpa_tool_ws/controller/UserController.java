@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import sk.tuke.fpa_tool_ws.dto.ApiResponse;
 import sk.tuke.fpa_tool_ws.dto.UserDto;
 import sk.tuke.fpa_tool_ws.model.User;
-import sk.tuke.fpa_tool_ws.service.UserServiceImpl;
+import sk.tuke.fpa_tool_ws.service.impl.UserServiceImpl;
 
 import java.util.Collection;
 
