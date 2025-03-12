@@ -1,6 +1,7 @@
 package sk.tuke.fpa_tool_ws.controller;
 
 import org.springframework.web.bind.annotation.*;
+import sk.tuke.fpa_tool_ws.dto.ApiResponse;
 import sk.tuke.fpa_tool_ws.dto.CalculationDto;
 import sk.tuke.fpa_tool_ws.service.CalculationService;
 
@@ -17,19 +18,20 @@ public class CalculationController {
     }
 
     @GetMapping
-    public Collection<CalculationDto> getCalculations() {
-        return this.calculationService.getCalculations();
+    public ApiResponse<Collection<CalculationDto>>  getCalculations() {
+        Collection<CalculationDto> result = this.calculationService.getCalculations();
+        return new ApiResponse<>(200, "Calculations retrieved successfully", result);
     }
 
     @PostMapping
-    public void createCalculation(@RequestBody CalculationDto dto) {
+    public ApiResponse<Object> createCalculation(@RequestBody CalculationDto dto) {
         this.calculationService.createCalculation(dto);
+        return new ApiResponse<>(200, "Calculation created successfully", null);
     }
 
     @GetMapping("/{userId}")
-    public Collection<CalculationDto> getCalculations(@PathVariable String userId) {
-        return this.calculationService.getCalculationsByUserId(userId);
+    public ApiResponse<Collection<CalculationDto>> getCalculations(@PathVariable String userId) {
+        Collection<CalculationDto> result = this.calculationService.getCalculationsByUserId(userId);
+        return new ApiResponse<>(200, "Calculations retrieved successfully", result);
     }
-
-
 }
