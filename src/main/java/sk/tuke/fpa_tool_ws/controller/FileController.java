@@ -18,7 +18,7 @@ public class FileController {
         this.excelReaderService = excelReaderService;
     }
 
-    @PostMapping
+    @PostMapping("/upload-calculations")
     public ApiResponse<Object> saveFile(@RequestParam("name") String name,
                                         @RequestParam("description") String description,
                                         @RequestParam("file") MultipartFile file) throws IOException {
