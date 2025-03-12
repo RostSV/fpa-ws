@@ -13,7 +13,7 @@ public class CurrentUserServiceImpl implements CurrentUserService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(authentication != null){
             CustomUserDetails principal = (CustomUserDetails) authentication.getPrincipal();
-            return principal.getUserId().toString();
+            return principal.getUserId();
         }
         return null;
     }

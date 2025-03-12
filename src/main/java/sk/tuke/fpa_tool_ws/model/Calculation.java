@@ -1,5 +1,6 @@
 package sk.tuke.fpa_tool_ws.model;
 
+import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -16,6 +17,7 @@ public class Calculation {
     private String id;
 
     @Indexed
+    @CreatedBy
     private String createdBy;
 
     @CreatedDate

@@ -41,7 +41,7 @@ public class ExcelReaderServiceImpl implements ExcelReaderService {
             calculations.add(CalculationMapper.getEmptyCalculationDtoWithValues(values));
         }
 
-        calculationService.createGroupWithCalculations(new Info(getName(payload), payload.getDescription()), calculations);
+        calculationService.importGroupWithCalculations(new Info(getName(payload), payload.getDescription()), calculations);
     }
 
     private List<List<CalculationValue>> readFile(MultipartFile file) throws IOException {

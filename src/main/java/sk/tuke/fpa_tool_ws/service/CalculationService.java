@@ -19,4 +19,6 @@ public interface CalculationService {
     void saveCalculationToGroup(String groupId, CalculationDto calculationDto);
 
     void createGroupWithCalculations(Info calculationInfo, Collection<CalculationDto> calculations);
+
+    void importGroupWithCalculations(Info calculationInfo, Collection<CalculationDto> calculations);
 }

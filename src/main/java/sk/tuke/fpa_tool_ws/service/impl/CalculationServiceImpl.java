@@ -11,6 +11,7 @@ import sk.tuke.fpa_tool_ws.security.CurrentUserService;
 import sk.tuke.fpa_tool_ws.service.CalculationService;
 
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -28,7 +29,6 @@ public class CalculationServiceImpl implements CalculationService {
     @Override
     public void createCalculation(CalculationDto dto) {
         Calculation calculation = CalculationMapper.toEntity(dto);
-        calculation.setCreatedBy(currentUserService.getUserId());
         calculationRepository.save(calculation);
     }
 
@@ -49,7 +49,6 @@ public class CalculationServiceImpl implements CalculationService {
         calculation.setName(calculationInfo.getName());
         calculation.setDescription(calculationInfo.getDescription());
         calculation.setType(CalculationType.GROUP);
-        calculation.setCreatedBy(currentUserService.getUserId());
         return calculationRepository.save(calculation);
     }
 
@@ -64,6 +63,16 @@ public class CalculationServiceImpl implements CalculationService {
     public void createGroupWithCalculations(Info calculationInfo, Collection<CalculationDto> calculations) {
         Calculation group = createGroupCalculation(calculationInfo);
         calculations.forEach(calculationDto -> saveCalculationToGroup(group.getId(), calculationDto));
+    }
+
+    @Override
+    public void importGroupWithCalculations(Info calculationInfo, Collection<CalculationDto> calculations) {
+        Collection<CalculationDto> importedCalculations = calculations.stream()
+                .peek(calculationDto -> {
+                    calculationDto.setType(CalculationType.IMPORTED);
+                })
+                .toList();
+        createGroupWithCalculations(calculationInfo, importedCalculations);
     }
 
 }
