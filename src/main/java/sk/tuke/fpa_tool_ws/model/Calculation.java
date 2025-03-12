@@ -8,16 +8,15 @@ import sk.tuke.fpa_tool_ws.enums.CalculationType;
 
 import java.time.Instant;
 import java.util.Collection;
-import java.util.UUID;
 
 @Document(collection = "calculations")
 public class Calculation {
 
     @Id
-    private UUID id;
+    private String id;
 
     @Indexed
-    private UUID createdBy;
+    private String createdBy;
 
     @CreatedDate
     private Instant createdAt;
@@ -28,23 +27,23 @@ public class Calculation {
 
     private CalculationType type;
 
-    private UUID groupId;
+    private String groupId;
 
     private Collection<CalculationValue> values;
 
-    public UUID getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(UUID id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public UUID getCreatedBy() {
+    public String getCreatedBy() {
         return createdBy;
     }
 
-    public void setCreatedBy(UUID createdBy) {
+    public void setCreatedBy(String createdBy) {
         this.createdBy = createdBy;
     }
 
@@ -88,11 +87,11 @@ public class Calculation {
         this.description = description;
     }
 
-    public UUID getGroupId() {
+    public String getGroupId() {
         return groupId;
     }
 
-    public void setGroupId(UUID groupId) {
+    public void setGroupId(String groupId) {
         this.groupId = groupId;
     }
 }

@@ -5,10 +5,9 @@ import org.springframework.stereotype.Repository;
 import sk.tuke.fpa_tool_ws.model.User;
 
 import java.util.Optional;
-import java.util.UUID;
 
 @Repository
-public interface UserRepository extends MongoRepository<User, UUID> {
+public interface UserRepository extends MongoRepository<User, String> {
 
     Optional<User> findByEmail(String email);
 

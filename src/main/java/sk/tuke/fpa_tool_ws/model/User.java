@@ -6,13 +6,12 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import sk.tuke.fpa_tool_ws.enums.Role;
 
 import java.util.Set;
-import java.util.UUID;
 
 @Document(collection = "users")
 public class User {
 
     @Id
-    private UUID id;
+    private String id;
 
     @Indexed(unique = true)
     private String username;
@@ -34,11 +33,11 @@ public class User {
         this.enabled = enabled;
     }
 
-    public UUID getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(UUID id) {
+    public void setId(String id) {
         this.id = id;
     }
 

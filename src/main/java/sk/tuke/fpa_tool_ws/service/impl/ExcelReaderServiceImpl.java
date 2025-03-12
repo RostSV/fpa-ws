@@ -7,14 +7,18 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import sk.tuke.fpa_tool_ws.dto.CalculationDto;
 import sk.tuke.fpa_tool_ws.dto.request.SaveXlsRequest;
+import sk.tuke.fpa_tool_ws.mapper.CalculationMapper;
 import sk.tuke.fpa_tool_ws.model.CalculationValue;
+import sk.tuke.fpa_tool_ws.model.common.Info;
 import sk.tuke.fpa_tool_ws.service.CalculationService;
 import sk.tuke.fpa_tool_ws.service.ExcelReaderService;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Service
@@ -31,7 +35,13 @@ public class ExcelReaderServiceImpl implements ExcelReaderService {
     public void saveExcelFile(SaveXlsRequest payload) throws IOException {
         MultipartFile file = payload.getFile();
         validateFile(file);
-        readFile(file);
+
+        Collection<CalculationDto> calculations = new ArrayList<>();
+        for(List<CalculationValue> values : readFile(file)){
+            calculations.add(CalculationMapper.getEmptyCalculationDtoWithValues(values));
+        }
+
+        calculationService.createGroupWithCalculations(new Info(getName(payload), payload.getDescription()), calculations);
     }
 
     private List<List<CalculationValue>> readFile(MultipartFile file) throws IOException {
@@ -61,7 +71,7 @@ public class ExcelReaderServiceImpl implements ExcelReaderService {
                 }
 
                 for (int colIndex = 0; colIndex < headers.size(); colIndex++){
-                    values.add(new CalculationValue(row.getCell(colIndex), headers.get(colIndex)));
+                    values.add(new CalculationValue(getCellValue(row.getCell(colIndex)), headers.get(colIndex)));
                 }
                 calculationValues.add(values);
             }
@@ -112,7 +122,6 @@ public class ExcelReaderServiceImpl implements ExcelReaderService {
             case STRING -> cell.getStringCellValue();
             case NUMERIC -> String.valueOf(cell.getNumericCellValue());
             case BOOLEAN -> String.valueOf(cell.getBooleanCellValue());
-            case FORMULA -> cell.getCellFormula();
             default -> "";
         };
     }

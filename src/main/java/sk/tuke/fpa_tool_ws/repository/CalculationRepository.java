@@ -5,10 +5,9 @@ import org.springframework.stereotype.Repository;
 import sk.tuke.fpa_tool_ws.model.Calculation;
 
 import java.util.Collection;
-import java.util.UUID;
 
 @Repository
-public interface CalculationRepository extends MongoRepository<Calculation, UUID> {
+public interface CalculationRepository extends MongoRepository<Calculation, String> {
 
-    Collection<Calculation> findByCreatedBy(UUID userId);
+    Collection<Calculation> findByCreatedBy(String userId);
 }

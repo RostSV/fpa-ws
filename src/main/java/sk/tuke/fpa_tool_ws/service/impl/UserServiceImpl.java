@@ -9,7 +9,6 @@ import sk.tuke.fpa_tool_ws.repository.UserRepository;
 import sk.tuke.fpa_tool_ws.service.UserService;
 
 import java.util.Collection;
-import java.util.UUID;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -30,7 +29,6 @@ public class UserServiceImpl implements UserService {
         User newUser = userMapper.toEntity(dto);
         newUser.setPassword(hashedPassword);
         newUser.setEnabled(true);
-        newUser.setId(UUID.randomUUID());
         userRepository.save(newUser);
     }
 

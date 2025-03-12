@@ -6,7 +6,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import sk.tuke.fpa_tool_ws.model.User;
 
 import java.util.Collection;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class CustomUserDetails implements UserDetails {
@@ -58,7 +57,7 @@ public class CustomUserDetails implements UserDetails {
         return user;
     }
 
-    public UUID getUserId(){
+    public String getUserId(){
         return user.getId();
     }
 }
