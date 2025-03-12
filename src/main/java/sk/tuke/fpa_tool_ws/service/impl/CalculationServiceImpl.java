@@ -35,11 +35,12 @@ public class CalculationServiceImpl implements CalculationService {
 
     @Override
     public Collection<CalculationDto> getCalculationsByUserId(String userId) {
-        return CalculationMapper.toCalculationDtoCollection(calculationRepository.findByCreatedBy(userId));
+
+        return CalculationMapper.toCalculationDtoCollection(calculationRepository.findByCreatedBy(UUID.fromString(userId)));
     }
 
     @Override
     public Collection<CalculationDto> getCalculations() {
-        return CalculationMapper.toCalculationDtoCollection(calculationRepository.findByCreatedBy(currentUserService.getUserId()));
+        return CalculationMapper.toCalculationDtoCollection(calculationRepository.findByCreatedBy(UUID.fromString(currentUserService.getUserId())));
     }
 }

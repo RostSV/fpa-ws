@@ -10,5 +10,5 @@ import java.util.UUID;
 @Repository
 public interface CalculationRepository extends MongoRepository<Calculation, UUID> {
 
-    Collection<Calculation> findByCreatedBy(String userId);
+    Collection<Calculation> findByCreatedBy(UUID userId);
 }
