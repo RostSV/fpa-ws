@@ -5,11 +5,40 @@ import sk.tuke.fpa_tool_ws.model.CalculationValue;
 
 import java.time.Instant;
 import java.util.Collection;
+import java.util.UUID;
 
 public class CalculationDto {
+
+    private UUID id;
+    private String name;
+    private String description;
     private Instant createdAt;
     private CalculationType type;
     private Collection<CalculationValue> values;
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
     public Instant getCreatedAt() {
         return createdAt;

@@ -22,7 +22,13 @@ public class Calculation {
     @CreatedDate
     private Instant createdAt;
 
+    private String name;
+
+    private String description;
+
     private CalculationType type;
+
+    private UUID groupId;
 
     private Collection<CalculationValue> values;
 
@@ -64,5 +70,29 @@ public class Calculation {
 
     public void setValues(Collection<CalculationValue> values) {
         this.values = values;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public UUID getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(UUID groupId) {
+        this.groupId = groupId;
     }
 }
