@@ -26,6 +26,13 @@ public class CalculationController {
         return new ApiResponse<>(200, "Calculations retrieved successfully", result);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN','TEACHER','STUDENT')")
+    @GetMapping("/imported")
+    public ApiResponse<Collection<CalculationDto>> getImportedCalculations() {
+        Collection<CalculationDto> result = this.calculationService.getImportedCalculations();
+        return new ApiResponse<>(200, "Imported calculations retrieved successfully", result);
+    }
+
     @PreAuthorize("hasAnyRole('ADMIN','TEACHER')")
     @GetMapping("/{userId}")
     public ApiResponse<Collection<CalculationDto>> getCalculationsByUserId(@PathVariable String userId) {

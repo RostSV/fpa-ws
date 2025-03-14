@@ -27,4 +27,6 @@ public interface CalculationService {
     void importGroupWithCalculations(Info calculationInfo, Collection<CalculationDto> calculations);
 
     Collection<CalculationGroupDto> getCalculationsGroups();
+
+    Collection<CalculationDto> getImportedCalculations();
 }

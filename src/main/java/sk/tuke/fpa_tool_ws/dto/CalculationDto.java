@@ -1,5 +1,6 @@
 package sk.tuke.fpa_tool_ws.dto;
 
+import sk.tuke.fpa_tool_ws.enums.CalculationSourceType;
 import sk.tuke.fpa_tool_ws.enums.CalculationType;
 import sk.tuke.fpa_tool_ws.model.CalculationValue;
 
@@ -14,6 +15,7 @@ public class CalculationDto {
     private String groupId;
     private Instant createdAt;
     private CalculationType type;
+    private CalculationSourceType sourceType;
     private Collection<CalculationValue> values;
 
     public String getId() {
@@ -62,6 +64,14 @@ public class CalculationDto {
 
     public void setValues(Collection<CalculationValue> values) {
         this.values = values;
+    }
+
+    public CalculationSourceType getSourceType() {
+        return sourceType;
+    }
+
+    public void setSourceType(CalculationSourceType sourceType) {
+        this.sourceType = sourceType;
     }
 
     public String getGroupId() {

@@ -1,6 +1,7 @@
 package sk.tuke.fpa_tool_ws.mapper;
 
 import sk.tuke.fpa_tool_ws.dto.CalculationDto;
+import sk.tuke.fpa_tool_ws.enums.CalculationSourceType;
 import sk.tuke.fpa_tool_ws.model.Calculation;
 import sk.tuke.fpa_tool_ws.model.CalculationValue;
 
@@ -28,6 +29,10 @@ public class CalculationMapper {
         calculation.setValues(calculationDto.getValues());
         calculation.setName(calculationDto.getName());
         calculation.setDescription(calculationDto.getDescription());
+
+        CalculationSourceType srcType = calculationDto.getSourceType() == null ? CalculationSourceType.CREATED : calculationDto.getSourceType();
+
+        calculation.setSourceType(srcType);
 
         return calculation;
     }

@@ -5,6 +5,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.index.Indexed;
+import sk.tuke.fpa_tool_ws.enums.CalculationSourceType;
 import sk.tuke.fpa_tool_ws.enums.CalculationType;
 
 import java.time.Instant;
@@ -30,6 +31,16 @@ public class Calculation {
     private CalculationType type;
 
     private String groupId;
+
+    private CalculationSourceType sourceType;
+
+    public CalculationSourceType getSourceType() {
+        return sourceType;
+    }
+
+    public void setSourceType(CalculationSourceType sourceType) {
+        this.sourceType = sourceType;
+    }
 
     private Collection<CalculationValue> values;
 

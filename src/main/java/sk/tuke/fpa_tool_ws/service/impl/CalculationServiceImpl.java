@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import sk.tuke.fpa_tool_ws.dto.CalculationDto;
 import sk.tuke.fpa_tool_ws.dto.CalculationGroupDto;
 import sk.tuke.fpa_tool_ws.enums.CalculationGroupType;
+import sk.tuke.fpa_tool_ws.enums.CalculationSourceType;
 import sk.tuke.fpa_tool_ws.enums.CalculationType;
 import sk.tuke.fpa_tool_ws.mapper.CalculationGroupMapper;
 import sk.tuke.fpa_tool_ws.mapper.CalculationMapper;
@@ -16,6 +17,7 @@ import sk.tuke.fpa_tool_ws.security.CurrentUserService;
 import sk.tuke.fpa_tool_ws.service.CalculationService;
 
 import java.util.Collection;
+import java.util.List;
 
 
 @Service
@@ -51,7 +53,7 @@ public class CalculationServiceImpl implements CalculationService {
 
     @Override
     public Collection<CalculationDto> getCalculations() {
-        return CalculationMapper.toCalculationDtoCollection(calculationRepository.findByCreatedBy(currentUserService.getUserId()));
+        return CalculationMapper.toCalculationDtoCollection(calculationRepository.findByCreatedByAndSourceType(currentUserService.getUserId(), CalculationSourceType.CREATED));
     }
 
     @Override
@@ -79,7 +81,8 @@ public class CalculationServiceImpl implements CalculationService {
     public void importGroupWithCalculations(Info calculationInfo, Collection<CalculationDto> calculations) {
         Collection<CalculationDto> importedCalculations = calculations.stream()
                 .peek(calculationDto -> {
-                    calculationDto.setType(CalculationType.IMPORTED);
+                    calculationDto.setType(CalculationType.NONE);
+                    calculationDto.setSourceType(CalculationSourceType.IMPORTED);
                 })
                 .toList();
         createGroupWithCalculations(calculationInfo,  CalculationGroupType.IMPORTED, importedCalculations);
@@ -88,6 +91,11 @@ public class CalculationServiceImpl implements CalculationService {
     @Override
     public Collection<CalculationGroupDto> getCalculationsGroups() {
         return CalculationGroupMapper.toDto(calculationGroupRepository.findByCreatedBy(currentUserService.getUserId()));
+    }
+
+    @Override
+    public Collection<CalculationDto> getImportedCalculations() {
+        return CalculationMapper.toCalculationDtoCollection(calculationRepository.findByCreatedByAndSourceType(currentUserService.getUserId(), CalculationSourceType.IMPORTED));
     }
 
 }
