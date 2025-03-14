@@ -1,7 +1,7 @@
 package sk.tuke.fpa_tool_ws.service;
 
-import sk.tuke.fpa_tool_ws.dto.UserDto;
+import sk.tuke.fpa_tool_ws.dto.request.UserRegisterRequest;
 
 public interface UserService {
-    void createUser(UserDto dto, String password);
+    void createUser(UserRegisterRequest payload);
 }
