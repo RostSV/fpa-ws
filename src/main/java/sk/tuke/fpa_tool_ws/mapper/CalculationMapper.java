@@ -17,6 +17,7 @@ public class CalculationMapper {
         calculationDto.setCreatedAt(calculation.getCreatedAt());
         calculationDto.setType(calculation.getType());
         calculationDto.setValues(calculation.getValues());
+        calculationDto.setGroupId(calculation.getGroupId());
 
         return calculationDto;
     }

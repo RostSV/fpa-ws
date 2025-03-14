@@ -10,4 +10,7 @@ import java.util.Collection;
 public interface CalculationRepository extends MongoRepository<Calculation, String> {
 
     Collection<Calculation> findByCreatedBy(String userId);
+
+    Collection<Calculation> findByGroupId(String groupId);
+
 }

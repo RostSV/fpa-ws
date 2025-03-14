@@ -4,6 +4,5 @@ public enum CalculationType {
     FP,
     B_COCOMO,
     INT_COCOMO,
-    GROUP,
     IMPORTED
 }

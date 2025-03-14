@@ -4,6 +4,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import sk.tuke.fpa_tool_ws.dto.ApiResponse;
 import sk.tuke.fpa_tool_ws.dto.CalculationDto;
+import sk.tuke.fpa_tool_ws.dto.CalculationGroupDto;
 import sk.tuke.fpa_tool_ws.service.CalculationService;
 
 import java.util.Collection;
@@ -20,10 +21,34 @@ public class CalculationController {
 
     @PreAuthorize("hasAnyRole('ADMIN','TEACHER','STUDENT')")
     @GetMapping
-    public ApiResponse<Collection<CalculationDto>>  getCalculations() {
+    public ApiResponse<Collection<CalculationDto>> getCalculations() {
         Collection<CalculationDto> result = this.calculationService.getCalculations();
         return new ApiResponse<>(200, "Calculations retrieved successfully", result);
     }
+
+    @PreAuthorize("hasAnyRole('ADMIN','TEACHER')")
+    @GetMapping("/{userId}")
+    public ApiResponse<Collection<CalculationDto>> getCalculationsByUserId(@PathVariable String userId) {
+        Collection<CalculationDto> result = this.calculationService.getCalculationsByUserId(userId);
+        return new ApiResponse<>(200, "Calculations retrieved successfully", result);
+    }
+
+    @PreAuthorize("hasAnyRole('ADMIN','TEACHER','STUDENT')")
+    @GetMapping("/groups")
+    public ApiResponse<Collection<CalculationGroupDto>> getCalculationsGroups() {
+        Collection<CalculationGroupDto> result = this.calculationService.getCalculationsGroups();
+        return new ApiResponse<>(200, "Groups retrieved successfully", result);
+    }
+
+    @PreAuthorize("hasAnyRole('ADMIN','TEACHER','STUDENT')")
+    @GetMapping("/groups/{groupId}")
+    public ApiResponse<Collection<CalculationDto>> getCalculationsByGroupId(@PathVariable String groupId) {
+        Collection<CalculationDto> result = this.calculationService.getCalculationsByGroupId(groupId);
+        return new ApiResponse<>(200, "Calculations retrieved successfully", result);
+    }
+
+
+
 
     @PreAuthorize("hasAnyRole('ADMIN','TEACHER','STUDENT')")
     @PostMapping
@@ -32,10 +57,4 @@ public class CalculationController {
         return new ApiResponse<>(200, "Calculation created successfully", null);
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN','TEACHER')")
-    @GetMapping("/{userId}")
-    public ApiResponse<Collection<CalculationDto>> getCalculations(@PathVariable String userId) {
-        Collection<CalculationDto> result = this.calculationService.getCalculationsByUserId(userId);
-        return new ApiResponse<>(200, "Calculations retrieved successfully", result);
-    }
 }

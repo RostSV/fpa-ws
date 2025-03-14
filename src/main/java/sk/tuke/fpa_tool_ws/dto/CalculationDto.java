@@ -11,6 +11,7 @@ public class CalculationDto {
     private String id;
     private String name;
     private String description;
+    private String groupId;
     private Instant createdAt;
     private CalculationType type;
     private Collection<CalculationValue> values;
@@ -61,5 +62,13 @@ public class CalculationDto {
 
     public void setValues(Collection<CalculationValue> values) {
         this.values = values;
+    }
+
+    public String getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(String groupId) {
+        this.groupId = groupId;
     }
 }
