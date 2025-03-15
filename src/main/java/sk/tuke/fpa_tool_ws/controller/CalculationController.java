@@ -64,4 +64,18 @@ public class CalculationController {
         return new ApiResponse<>(200, "Calculation created successfully", null);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN','TEACHER','STUDENT')")
+    @PutMapping
+    public ApiResponse<Object> updateCalculation(@RequestBody CalculationDto dto) {
+        this.calculationService.updateCalculation(dto);
+        return new ApiResponse<>(200, "Calculation updated successfully", null);
+    }
+
+    @PreAuthorize("hasAnyRole('ADMIN','TEACHER','STUDENT')")
+    @DeleteMapping("/{id}")
+    public ApiResponse<Object> deleteCalculation(@PathVariable String id) {
+        this.calculationService.deleteCalculation(id);
+        return new ApiResponse<>(200, "Calculation deleted successfully", null);
+    }
+
 }

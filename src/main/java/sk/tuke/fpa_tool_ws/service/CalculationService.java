@@ -29,4 +29,8 @@ public interface CalculationService {
     Collection<CalculationGroupDto> getCalculationsGroups();
 
     Collection<CalculationDto> getImportedCalculations();
+
+    void updateCalculation(CalculationDto dto);
+
+    void deleteCalculation(String id);
 }

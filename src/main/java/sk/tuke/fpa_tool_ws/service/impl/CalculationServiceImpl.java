@@ -6,6 +6,7 @@ import sk.tuke.fpa_tool_ws.dto.CalculationGroupDto;
 import sk.tuke.fpa_tool_ws.enums.CalculationGroupType;
 import sk.tuke.fpa_tool_ws.enums.CalculationSourceType;
 import sk.tuke.fpa_tool_ws.enums.CalculationType;
+import sk.tuke.fpa_tool_ws.exception.CalculationNotFoundException;
 import sk.tuke.fpa_tool_ws.mapper.CalculationGroupMapper;
 import sk.tuke.fpa_tool_ws.mapper.CalculationMapper;
 import sk.tuke.fpa_tool_ws.model.Calculation;
@@ -17,7 +18,7 @@ import sk.tuke.fpa_tool_ws.security.CurrentUserService;
 import sk.tuke.fpa_tool_ws.service.CalculationService;
 
 import java.util.Collection;
-import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -96,6 +97,26 @@ public class CalculationServiceImpl implements CalculationService {
     @Override
     public Collection<CalculationDto> getImportedCalculations() {
         return CalculationMapper.toCalculationDtoCollection(calculationRepository.findByCreatedByAndSourceType(currentUserService.getUserId(), CalculationSourceType.IMPORTED));
+    }
+
+    @Override
+    public void updateCalculation(CalculationDto dto) {
+        Optional<Calculation> existingCalculation = calculationRepository.findById(dto.getId());
+
+        if (existingCalculation.isEmpty()) {
+            throw new CalculationNotFoundException("Calculation not found");
+        }
+
+        Calculation calculation = existingCalculation.get();
+        calculation.setName(dto.getName());
+        calculation.setDescription(dto.getDescription());
+
+        calculationRepository.save(calculation);
+    }
+
+    @Override
+    public void deleteCalculation(String id) {
+        calculationRepository.deleteById(id);
     }
 
 }

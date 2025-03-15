@@ -13,8 +13,8 @@ public class CalculationMapper {
     public static CalculationDto toCalculationDto(Calculation calculation) {
         CalculationDto calculationDto = new CalculationDto();
         calculationDto.setId(calculation.getId());
-        calculation.setName(calculation.getName());
-        calculation.setDescription(calculation.getDescription());
+        calculationDto.setName(calculation.getName());
+        calculationDto.setDescription(calculation.getDescription());
         calculationDto.setCreatedAt(calculation.getCreatedAt());
         calculationDto.setType(calculation.getType());
         calculationDto.setValues(calculation.getValues());
