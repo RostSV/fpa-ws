@@ -10,7 +10,8 @@ public class CalculationGroupMapper {
 
     public static CalculationGroup toEntity(CalculationGroupDto calculationGroupDto) {
         CalculationGroup calculationGroup = new CalculationGroup();
-        calculationGroup.setInfo(calculationGroupDto.getInfo());
+        calculationGroup.setName(calculationGroupDto.getName());
+        calculationGroup.setDescription(calculationGroupDto.getDescription());
         calculationGroup.setType(calculationGroupDto.getType());
         return calculationGroup;
     }
@@ -19,7 +20,8 @@ public class CalculationGroupMapper {
         CalculationGroupDto calculationGroupDto = new CalculationGroupDto();
         calculationGroupDto.setId(calculationGroup.getId());
         calculationGroupDto.setCreatedAt(calculationGroup.getCreatedAt());
-        calculationGroupDto.setInfo(calculationGroup.getInfo());
+        calculationGroupDto.setDescription(calculationGroup.getDescription());
+        calculationGroupDto.setName(calculationGroup.getName());
         calculationGroupDto.setType(calculationGroup.getType());
         return calculationGroupDto;
     }

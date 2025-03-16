@@ -9,8 +9,9 @@ import java.time.Instant;
 public class CalculationGroupDto {
     private String id;
     private Instant createdAt;
-    private Info info;
     private CalculationGroupType type;
+    private String name;
+    private String description;
 
     public CalculationGroupType getType() {
         return type;
@@ -36,11 +37,20 @@ public class CalculationGroupDto {
         this.createdAt = createdAt;
     }
 
-    public Info getInfo() {
-        return info;
+    public String getName() {
+        return name;
     }
 
-    public void setInfo(Info info) {
-        this.info = info;
+    public void setName(String name) {
+        this.name = name;
     }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
 }

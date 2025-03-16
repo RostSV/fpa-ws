@@ -5,7 +5,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class SaveXlsRequest {
     private String name;
     private String description;
-    private MultipartFile file;
+    private MultipartFile[] files;
 
     public String getName() {
         return name;
@@ -23,17 +23,17 @@ public class SaveXlsRequest {
         this.description = description;
     }
 
-    public SaveXlsRequest(String name, String description, MultipartFile file) {
+    public SaveXlsRequest(String name, String description, MultipartFile[] files) {
         this.name = name;
         this.description = description;
-        this.file = file;
+        this.files = files;
     }
 
-    public MultipartFile getFile() {
-        return file;
+    public MultipartFile[] getFiles() {
+        return files;
     }
 
-    public void setFile(MultipartFile file) {
-        this.file = file;
+    public void setFiles(MultipartFile[] files) {
+        this.files = files;
     }
 }

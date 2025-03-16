@@ -1,5 +1,6 @@
 package sk.tuke.fpa_tool_ws.service.impl;
 
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import sk.tuke.fpa_tool_ws.dto.CalculationDto;
 import sk.tuke.fpa_tool_ws.dto.CalculationGroupDto;
@@ -7,6 +8,7 @@ import sk.tuke.fpa_tool_ws.enums.CalculationGroupType;
 import sk.tuke.fpa_tool_ws.enums.CalculationSourceType;
 import sk.tuke.fpa_tool_ws.enums.CalculationType;
 import sk.tuke.fpa_tool_ws.exception.CalculationNotFoundException;
+import sk.tuke.fpa_tool_ws.exception.DuplicateValueException;
 import sk.tuke.fpa_tool_ws.mapper.CalculationGroupMapper;
 import sk.tuke.fpa_tool_ws.mapper.CalculationMapper;
 import sk.tuke.fpa_tool_ws.model.Calculation;
@@ -60,9 +62,17 @@ public class CalculationServiceImpl implements CalculationService {
     @Override
     public CalculationGroup createGroupCalculation(Info calculationInfo, CalculationGroupType type) {
         CalculationGroup calculationGroup = new CalculationGroup();
-        calculationGroup.setInfo(calculationInfo);
+        calculationGroup.setName(calculationInfo.getName());
+        calculationGroup.setDescription(calculationInfo.getDescription());
         calculationGroup.setType(type);
-        return calculationGroupRepository.save(calculationGroup);
+
+        try{
+            calculationGroupRepository.save(calculationGroup);
+        }catch(DuplicateKeyException e){
+            throw new DuplicateValueException("Group with name " + calculationGroup.getName() + " already exists");
+        }
+
+        return calculationGroup;
     }
 
     @Override

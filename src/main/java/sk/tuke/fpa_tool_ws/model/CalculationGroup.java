@@ -22,7 +22,17 @@ public class CalculationGroup {
     @CreatedDate
     private Instant createdAt;
 
-    private Info info;
+    @Indexed(unique = true)
+    private String name;
+    private String description;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     private CalculationGroupType type;
 
@@ -59,11 +69,11 @@ public class CalculationGroup {
         this.type = type;
     }
 
-    public Info getInfo() {
-        return info;
+    public String getDescription() {
+        return description;
     }
 
-    public void setInfo(Info info) {
-        this.info = info;
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

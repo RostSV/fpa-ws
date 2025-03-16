@@ -32,16 +32,22 @@ public class ExcelReaderServiceImpl implements ExcelReaderService {
     }
 
     @Override
-    public void saveExcelFile(SaveXlsRequest payload) throws IOException {
-        MultipartFile file = payload.getFile();
-        validateFile(file);
+    public void saveExcelFiles(SaveXlsRequest payload) throws IOException {
+        for(MultipartFile file: payload.getFiles()){
+            validateFile(file);
 
-        Collection<CalculationDto> calculations = new ArrayList<>();
-        for(List<CalculationValue> values : readFile(file)){
-            calculations.add(CalculationMapper.getEmptyCalculationDtoWithValues(values));
+            Collection<CalculationDto> calculations = new ArrayList<>();
+            for(List<CalculationValue> values : readFile(file)){
+                calculations.add(CalculationMapper.getEmptyCalculationDtoWithValues(values));
+            }
+
+            if(payload.getFiles().length > 1){
+                calculationService.importGroupWithCalculations(new Info(file.getOriginalFilename(), null), calculations);
+            }else{
+                calculationService.importGroupWithCalculations(new Info(getName(payload), payload.getDescription()), calculations);
+
+            }
         }
-
-        calculationService.importGroupWithCalculations(new Info(getName(payload), payload.getDescription()), calculations);
     }
 
     private List<List<CalculationValue>> readFile(MultipartFile file) throws IOException {
@@ -83,10 +89,10 @@ public class ExcelReaderServiceImpl implements ExcelReaderService {
     private String getName(SaveXlsRequest payload) {
 
         if(!payload.getName().isEmpty()){
-            return payload.getName() + "( " + payload.getFile().getOriginalFilename() + " )";
+            return payload.getName() + "(" + payload.getFiles()[0].getOriginalFilename() + ")";
         }
 
-        return payload.getFile().getOriginalFilename();
+        return payload.getFiles()[0].getOriginalFilename();
     }
 
     private List<String> getHeaders(Sheet sheet) {

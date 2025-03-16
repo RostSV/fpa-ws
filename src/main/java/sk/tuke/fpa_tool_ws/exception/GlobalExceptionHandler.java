@@ -1,6 +1,8 @@
 package sk.tuke.fpa_tool_ws.exception;
 
+import com.mongodb.MongoWriteException;
 import jakarta.validation.UnexpectedTypeException;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -18,9 +20,16 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(DuplicateValueException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ResponseEntity<ApiResponse<String>> handleDuplicateValueException(DuplicateValueException ex) {
+        ApiResponse<String> response = new ApiResponse<>(409, ex.getMessage(), null);
+        return new ResponseEntity<>(response, HttpStatus.CONFLICT);
+    }
+
     // Exception handler for UnexpectedTypeException when the request body is not valid
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ApiResponse<String>> handleException(UnexpectedTypeException ex) {
+    public ResponseEntity<ApiResponse<String>> handleException(Exception ex) {
         ApiResponse<String> response = new ApiResponse<>(400, ex.getMessage(), null);
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }

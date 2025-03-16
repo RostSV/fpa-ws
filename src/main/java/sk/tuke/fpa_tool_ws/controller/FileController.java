@@ -21,8 +21,8 @@ public class FileController {
     @PostMapping("/upload-calculations")
     public ApiResponse<Object> saveFile(@RequestParam("name") String name,
                                         @RequestParam("description") String description,
-                                        @RequestParam("file") MultipartFile file) throws IOException {
-        this.excelReaderService.saveExcelFile(new SaveXlsRequest(name, description, file));
+                                        @RequestParam("files") MultipartFile[] files) throws IOException {
+        this.excelReaderService.saveExcelFiles(new SaveXlsRequest(name, description, files));
         return new ApiResponse<>(200, "File imported successfully", null);
     }
 }
