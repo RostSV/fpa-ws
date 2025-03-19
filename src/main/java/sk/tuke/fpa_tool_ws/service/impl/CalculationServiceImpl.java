@@ -20,6 +20,8 @@ import sk.tuke.fpa_tool_ws.security.CurrentUserService;
 import sk.tuke.fpa_tool_ws.service.CalculationService;
 
 import java.util.Collection;
+import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 
@@ -52,6 +54,16 @@ public class CalculationServiceImpl implements CalculationService {
     @Override
     public Collection<CalculationDto> getCalculationsByGroupId(String groupId) {
         return CalculationMapper.toCalculationDtoCollection(calculationRepository.findByGroupId(groupId));
+    }
+
+
+    @Override
+    public CalculationGroupDto getCalculationsGroupById(String groupId) {
+        try{
+            return CalculationGroupMapper.toDto(calculationGroupRepository.findById(groupId).get());
+        }catch (NoSuchElementException e){
+            throw new CalculationNotFoundException("Group not found");
+        }
     }
 
     @Override

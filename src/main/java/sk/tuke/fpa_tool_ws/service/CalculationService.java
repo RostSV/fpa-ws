@@ -33,4 +33,6 @@ public interface CalculationService {
     void updateCalculation(CalculationDto dto);
 
     void deleteCalculation(String id);
+
+    CalculationGroupDto getCalculationsGroupById(String groupId);
 }

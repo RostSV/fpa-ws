@@ -48,14 +48,18 @@ public class CalculationController {
     }
 
     @PreAuthorize("hasAnyRole('ADMIN','TEACHER','STUDENT')")
+    @GetMapping("/groups/info/{groupId}")
+    public ApiResponse<CalculationGroupDto> getCalculationsGroupById(@PathVariable String groupId) {
+        CalculationGroupDto result = this.calculationService.getCalculationsGroupById(groupId);
+        return new ApiResponse<>(200, "Group retrieved successfully", result);
+    }
+
+    @PreAuthorize("hasAnyRole('ADMIN','TEACHER','STUDENT')")
     @GetMapping("/groups/{groupId}")
     public ApiResponse<Collection<CalculationDto>> getCalculationsByGroupId(@PathVariable String groupId) {
         Collection<CalculationDto> result = this.calculationService.getCalculationsByGroupId(groupId);
         return new ApiResponse<>(200, "Calculations retrieved successfully", result);
     }
-
-
-
 
     @PreAuthorize("hasAnyRole('ADMIN','TEACHER','STUDENT')")
     @PostMapping

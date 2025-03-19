@@ -17,6 +17,9 @@ public class CalculationGroupMapper {
     }
 
     public static CalculationGroupDto toDto(CalculationGroup calculationGroup) {
+        if (calculationGroup == null) {
+            return new CalculationGroupDto();
+        }
         CalculationGroupDto calculationGroupDto = new CalculationGroupDto();
         calculationGroupDto.setId(calculationGroup.getId());
         calculationGroupDto.setCreatedAt(calculationGroup.getCreatedAt());
