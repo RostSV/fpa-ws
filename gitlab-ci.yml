@@ -1,0 +1,30 @@
+variables:
+  CONTAINER_NAME: fpa-tool-ws
+  DOCKER_IMAGE: fpa-tool-ws
+  APP_PORT: 8080
+  APP_PROPERTIES_PATH: /docker-config/fpa-tool/application.properties #Path to properties file on the server
+
+stages:
+  - build
+  - deploy
+
+build:
+  stage: build
+  tags:
+    - deploy
+  script:
+    - docker build --pull --no-cache -t $DOCKER_IMAGE .
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+
+deploy:
+  stage: deploy
+  tags:
+    - deploy
+  script:
+    - docker stop $CONTAINER_NAME || true
+    - docker rm $CONTAINER_NAME || true
+    - docker run -d --name $CONTAINER_NAME -p $APP_PORT:$APP_PORT -v $APP_PROPERTIES_PATH:/app/config/application.properties $DOCKER_IMAGE
+
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
