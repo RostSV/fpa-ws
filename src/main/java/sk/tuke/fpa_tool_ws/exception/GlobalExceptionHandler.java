@@ -1,8 +1,6 @@
 package sk.tuke.fpa_tool_ws.exception;
 
-import com.mongodb.MongoWriteException;
-import jakarta.validation.UnexpectedTypeException;
-import org.springframework.dao.DuplicateKeyException;
+import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -25,6 +23,13 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiResponse<String>> handleDuplicateValueException(DuplicateValueException ex) {
         ApiResponse<String> response = new ApiResponse<>(409, ex.getMessage(), null);
         return new ResponseEntity<>(response, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(ExpiredJwtException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ResponseEntity<ApiResponse<String>> handleExpiredJwtException(ExpiredJwtException ex) {
+        ApiResponse<String> response = new ApiResponse<>(401, ex.getMessage(), null);
+        return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
     }
 
     // Exception handler for UnexpectedTypeException when the request body is not valid
