@@ -1,10 +1,7 @@
 package sk.tuke.fpa_tool_ws.service.impl;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import sk.tuke.fpa_tool_ws.dto.CalculationDto;
@@ -57,6 +54,7 @@ public class ExcelReaderServiceImpl implements ExcelReaderService {
         try (InputStream is = file.getInputStream(); Workbook workbook = new HSSFWorkbook(is)) {
             // Read first sheet
             Sheet sheet = workbook.getSheetAt(0);
+            FormulaEvaluator evaluator = workbook.getCreationHelper().createFormulaEvaluator();
 
             if(sheet == null) {
                 throw new IllegalArgumentException("Sheet is empty");
@@ -77,7 +75,14 @@ public class ExcelReaderServiceImpl implements ExcelReaderService {
                 }
 
                 for (int colIndex = 0; colIndex < headers.size(); colIndex++){
-                    values.add(new CalculationValue(getCellValue(row.getCell(colIndex)), headers.get(colIndex)));
+
+                    Cell cell = row.getCell(colIndex);
+
+                    String value = cell != null && cell.getCellType() == CellType.FORMULA
+                            ? getCellValueWithFormula(cell, evaluator)
+                            : getCellValue(cell);
+
+                    values.add(new CalculationValue(value, headers.get(colIndex)));
                 }
                 calculationValues.add(values);
             }
@@ -128,6 +133,17 @@ public class ExcelReaderServiceImpl implements ExcelReaderService {
             case STRING -> cell.getStringCellValue();
             case NUMERIC -> String.valueOf(cell.getNumericCellValue());
             case BOOLEAN -> String.valueOf(cell.getBooleanCellValue());
+            default -> "";
+        };
+    }
+
+    private String getCellValueWithFormula(Cell cell, FormulaEvaluator evaluator) {
+        if (cell == null) return "";
+        CellValue cellValue = evaluator.evaluate(cell);
+        return switch (cellValue.getCellType()) {
+            case STRING -> cellValue.getStringValue();
+            case NUMERIC -> String.valueOf(cellValue.getNumberValue());
+            case BOOLEAN -> String.valueOf(cellValue.getBooleanValue());
             default -> "";
         };
     }
