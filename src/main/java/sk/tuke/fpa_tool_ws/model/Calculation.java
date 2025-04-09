@@ -34,6 +34,8 @@ public class Calculation {
 
     private CalculationSourceType sourceType;
 
+    private Collection<TableResult> tables;
+
     public CalculationSourceType getSourceType() {
         return sourceType;
     }
@@ -106,5 +108,13 @@ public class Calculation {
 
     public void setGroupId(String groupId) {
         this.groupId = groupId;
+    }
+
+    public Collection<TableResult> getTables() {
+        return tables;
+    }
+
+    public void setTables(Collection<TableResult> tables) {
+        this.tables = tables;
     }
 }

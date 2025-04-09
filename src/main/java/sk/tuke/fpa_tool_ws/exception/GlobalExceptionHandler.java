@@ -33,10 +33,10 @@ public class GlobalExceptionHandler {
     }
 
     // Exception handler for UnexpectedTypeException when the request body is not valid
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ApiResponse<String>> handleException(Exception ex) {
-        ApiResponse<String> response = new ApiResponse<>(400, ex.getMessage(), null);
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-    }
+//    @ExceptionHandler(Exception.class)
+//    public ResponseEntity<ApiResponse<String>> handleException(Exception ex) {
+//        ApiResponse<String> response = new ApiResponse<>(400, ex.getMessage(), null);
+//        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+//    }
 }
 

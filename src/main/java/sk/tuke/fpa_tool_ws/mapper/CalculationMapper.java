@@ -19,6 +19,7 @@ public class CalculationMapper {
         calculationDto.setType(calculation.getType());
         calculationDto.setValues(calculation.getValues());
         calculationDto.setGroupId(calculation.getGroupId());
+        calculationDto.setTables(calculation.getTables());
 
         return calculationDto;
     }
@@ -29,6 +30,7 @@ public class CalculationMapper {
         calculation.setValues(calculationDto.getValues());
         calculation.setName(calculationDto.getName());
         calculation.setDescription(calculationDto.getDescription());
+        calculation.setTables(calculationDto.getTables());
 
         CalculationSourceType srcType = calculationDto.getSourceType() == null ? CalculationSourceType.CREATED : calculationDto.getSourceType();
 

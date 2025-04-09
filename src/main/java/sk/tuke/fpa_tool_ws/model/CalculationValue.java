@@ -8,6 +8,8 @@ public class CalculationValue {
     private String name;
     private CalculationValueType valueType;
 
+    public CalculationValue() {
+    }
 
     public CalculationValue(Object value, String name) {
         this.value = value;
