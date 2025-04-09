@@ -14,6 +14,7 @@ import sk.tuke.fpa_tool_ws.model.CalculationValue;
 import sk.tuke.fpa_tool_ws.model.common.Info;
 import sk.tuke.fpa_tool_ws.service.CalculationService;
 import sk.tuke.fpa_tool_ws.service.ExcelReaderService;
+import sk.tuke.fpa_tool_ws.utils.ExcelFileValidator;
 import sk.tuke.fpa_tool_ws.utils.PropertiesManager;
 import sk.tuke.fpa_tool_ws.utils.Utils;
 
@@ -36,7 +37,8 @@ public class ExcelReaderServiceImpl implements ExcelReaderService {
     @Override
     public void saveExcelFiles(SaveXlsRequest payload) throws IOException {
         for(MultipartFile file: payload.getFiles()){
-            validateFile(file);
+
+            ExcelFileValidator.validateExcel(file);
 
             Collection<CalculationDto> calculations = new ArrayList<>();
             for(List<CalculationValue> values : readFile(file)){
@@ -125,19 +127,6 @@ public class ExcelReaderServiceImpl implements ExcelReaderService {
             headers.add(getCellValue(cell));
         }
         return headers;
-    }
-
-    private void validateFile(MultipartFile file) throws IOException {
-
-        String fileName = file.getOriginalFilename();
-
-        if (fileName == null || !fileName.endsWith(".xls")) {
-            throw new IllegalArgumentException("Invalid file format. Only .xls is supported.");
-        }
-
-        if(file.isEmpty() || file.getSize() == 0 || file.getBytes().length == 0) {
-            throw new IllegalArgumentException("File is empty");
-        }
     }
 
     private String getCellValue(Cell cell) {
