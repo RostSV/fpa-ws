@@ -6,11 +6,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import sk.tuke.fpa_tool_ws.dto.CalculationDto;
 import sk.tuke.fpa_tool_ws.dto.request.SaveXlsRequest;
+import sk.tuke.fpa_tool_ws.enums.CalculationType;
+import sk.tuke.fpa_tool_ws.enums.CalculationValueType;
 import sk.tuke.fpa_tool_ws.mapper.CalculationMapper;
+import sk.tuke.fpa_tool_ws.model.Calculation;
 import sk.tuke.fpa_tool_ws.model.CalculationValue;
 import sk.tuke.fpa_tool_ws.model.common.Info;
 import sk.tuke.fpa_tool_ws.service.CalculationService;
 import sk.tuke.fpa_tool_ws.service.ExcelReaderService;
+import sk.tuke.fpa_tool_ws.utils.PropertiesManager;
+import sk.tuke.fpa_tool_ws.utils.Utils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -53,20 +58,20 @@ public class ExcelReaderServiceImpl implements ExcelReaderService {
 
         try (InputStream is = file.getInputStream(); Workbook workbook = new HSSFWorkbook(is)) {
             // Read first sheet
-            Sheet sheet = workbook.getSheetAt(0);
+            Sheet sheet = workbook.getSheetAt(PropertiesManager.getXlsImportSheet());
             FormulaEvaluator evaluator = workbook.getCreationHelper().createFormulaEvaluator();
 
             if(sheet == null) {
                 throw new IllegalArgumentException("Sheet is empty");
             }
 
-            if(sheet.getPhysicalNumberOfRows() <=  2){
+            if(sheet.getPhysicalNumberOfRows() <= PropertiesManager.getXlsHeaderOffset()){
                 throw new IllegalArgumentException("Sheet is empty");
             }
 
             headers = getHeaders(sheet);
 
-            for (int rowIndex = 2; rowIndex <= sheet.getLastRowNum(); rowIndex++) {
+            for (int rowIndex = PropertiesManager.getXlsHeaderOffset(); rowIndex <= sheet.getLastRowNum(); rowIndex++) {
                 List<CalculationValue> values = new ArrayList<>();
                 Row row = sheet.getRow(rowIndex);
 
@@ -82,13 +87,21 @@ public class ExcelReaderServiceImpl implements ExcelReaderService {
                             ? getCellValueWithFormula(cell, evaluator)
                             : getCellValue(cell);
 
-                    values.add(new CalculationValue(value, headers.get(colIndex)));
+                    values.add(new CalculationValue(value, headers.get(colIndex), getCalculationValueType(colIndex)));
                 }
                 calculationValues.add(values);
             }
         }
 
         return calculationValues;
+    }
+
+    private CalculationValueType getCalculationValueType(int colIndex) {
+        if (Utils.isInRange(PropertiesManager.getXlsImportFpaColRange(), colIndex)) return CalculationValueType.FP;
+        if (Utils.isInRange(PropertiesManager.getXlsImportInfoColRange(), colIndex)) return CalculationValueType.INFO;
+        if (Utils.isInRange(PropertiesManager.getXlsImportBCocomoColRange(), colIndex)) return CalculationValueType.B_COCOMO;
+        if (Utils.isInRange(PropertiesManager.getXlsImportICocomoColRange(), colIndex)) return CalculationValueType.INT_COCOMO;
+        return CalculationValueType.NONE;
     }
 
     private String getName(SaveXlsRequest payload) {
