@@ -1,30 +1,38 @@
-variables:
-  CONTAINER_NAME: fpa-tool-ws
-  DOCKER_IMAGE: fpa-tool-ws
-  APP_PORT: 8080
-  APP_PROPERTIES_PATH: /docker-config/fpa-tool/application.properties #Path to properties file on the server
-
 stages:
   - build
   - deploy
 
-build:
+variables:
+  SPRING_JAR_FILE: ${SPRING_JAR_PATH}
+
+build-backend:
   stage: build
-  tags:
-    - deploy
+  image: maven:3.9.6-eclipse-temurin-21
   script:
-    - docker build --pull --no-cache -t $DOCKER_IMAGE .
+    - echo "Building Spring Boot application JAR..."
+    - mvn clean package -Dspring.profiles.active=prod -DskipTests
+    - echo "Build complete. JAR expected at $SPRING_JAR_FILE"
+    - ls -l $SPRING_JAR_FILE
+  artifacts:
+    paths:
+      - $SPRING_JAR_FILE
+    expire_in: 1 hour
   rules:
-    - if: $CI_COMMIT_BRANCH == "main"
+    - if: '$CI_COMMIT_BRANCH == "main"'
 
-deploy:
+deploy-backend:
   stage: deploy
-  tags:
-    - deploy
+  image: mcr.microsoft.com/azure-cli:latest
+  needs: ["build-backend"]
   script:
-    - docker stop $CONTAINER_NAME || true
-    - docker rm $CONTAINER_NAME || true
-    - docker run -d --name $CONTAINER_NAME -p $APP_PORT:$APP_PORT -v $APP_PROPERTIES_PATH:/app/config/application.properties $DOCKER_IMAGE
-
+    - echo "Logging into Azure using Service Principal..."
+    - az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET --tenant $AZURE_TENANT_ID
+    - echo "Setting Azure subscription..."
+    - az account set --subscription $AZURE_SUBSCRIPTION_ID
+    - echo >
+        "Deploying $SPRING_JAR_FILE to Azure Web App: $AZURE_BACKEND_APP_NAME in Resource Group: $AZURE_RESOURCE_GROUP..."
+    - az webapp deploy --resource-group $AZURE_RESOURCE_GROUP --name $AZURE_BACKEND_APP_NAME --src-path $SPRING_JAR_FILE --type jar
+    - echo "Backend deployment initiated successfully."
+    - az logout
   rules:
-    - if: $CI_COMMIT_BRANCH == "main"
+    - if: '$CI_COMMIT_BRANCH == "main"'
