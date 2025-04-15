@@ -29,8 +29,7 @@ deploy-backend:
     - az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET --tenant $AZURE_TENANT_ID
     - echo "Setting Azure subscription..."
     - az account set --subscription $AZURE_SUBSCRIPTION_ID
-    - echo >
-        "Deploying $SPRING_JAR_FILE to Azure Web App: $AZURE_BACKEND_APP_NAME in Resource Group: $AZURE_RESOURCE_GROUP..."
+    - echo "Deploying $SPRING_JAR_FILE to Azure Web App:"
     - az webapp deploy --resource-group $AZURE_RESOURCE_GROUP --name $AZURE_BACKEND_APP_NAME --src-path $SPRING_JAR_FILE --type jar
     - echo "Backend deployment initiated successfully."
     - az logout
