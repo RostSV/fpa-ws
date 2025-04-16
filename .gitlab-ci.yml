@@ -10,7 +10,7 @@ build-backend:
   image: maven:3.9.6-eclipse-temurin-21
   script:
     - echo "Building Spring Boot application JAR..."
-    - mvn clean package -Dspring.profiles.active=prod -DskipTests
+    - mvn clean package -DskipTests
     - echo "Build complete. JAR expected at $SPRING_JAR_FILE"
     - ls -l $SPRING_JAR_FILE
   artifacts:
