@@ -3,6 +3,7 @@ package sk.tuke.fpa_tool_ws.service;
 import sk.tuke.fpa_tool_ws.dto.CalculationDto;
 import sk.tuke.fpa_tool_ws.dto.CalculationGroupDto;
 import sk.tuke.fpa_tool_ws.enums.CalculationGroupType;
+import sk.tuke.fpa_tool_ws.model.Calculation;
 import sk.tuke.fpa_tool_ws.model.CalculationGroup;
 import sk.tuke.fpa_tool_ws.model.common.Info;
 
@@ -35,4 +36,6 @@ public interface CalculationService {
     void deleteCalculation(String id);
 
     CalculationGroupDto getCalculationsGroupById(String groupId);
+
+    CalculationDto getCalculationById(String calculationId);
 }

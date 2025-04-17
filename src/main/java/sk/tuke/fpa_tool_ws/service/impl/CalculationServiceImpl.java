@@ -67,6 +67,12 @@ public class CalculationServiceImpl implements CalculationService {
     }
 
     @Override
+    public CalculationDto getCalculationById(String calculationId) {
+        Optional<Calculation> dto = calculationRepository.findById(calculationId);
+        return dto.map(CalculationMapper::toCalculationDto).orElse(null);
+    }
+
+    @Override
     public Collection<CalculationDto> getCalculations() {
         return CalculationMapper.toCalculationDtoCollection(calculationRepository.findByCreatedByAndSourceType(currentUserService.getUserId(), CalculationSourceType.CREATED));
     }

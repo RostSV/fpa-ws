@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Calculation Report</title>
+    <style type="text/css">
+        @page {
+            size: A4;
+            margin: 1cm;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            color: #333;
+            line-height: 1.4;
+        }
+
+        h1 {
+            text-align: center;
+            color: rgb(52 109 74);
+            border-bottom: 2px solid rgb(52 109 74);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            color: #555;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 5px;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+
+        .calculation-block {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            page-break-inside: avoid;
+        }
+
+        .details-table, .values-table, .eaf-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 15px;
+        }
+
+        .details-table td, .values-table td, .eaf-table td,
+        .details-table th, .values-table th, .eaf-table th {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        .details-table th, .values-table th, .eaf-table th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+
+        .details-table td:first-child {
+            font-weight: bold;
+            width: 150px;
+        }
+
+        .values-table td:first-child, .eaf-table td:first-child {
+            font-weight: bold;
+            width: 200px;
+        }
+
+        .value-group-title {
+            font-weight: bold;
+            font-size: 1.1em;
+            margin-top: 10px;
+            margin-bottom: 5px;
+            color: #444;
+        }
+
+        .footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 0.8em;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+
+<div id="header" style="position:relative;">
+    <img th:if="${logoImageBase64 != null and !logoImageBase64.isEmpty()}"
+         th:src="'data:image/png;base64,' + ${logoImageBase64}"
+         alt="Logo"/>
+     <span style="font-size: 1.6em; font-weight: bold; margin-left: 15px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: rgb(52 109 74);">CALCULATION REPORT</span>
+</div>
+
+<div th:each="calc, iterStat : ${calculations}" class="calculation-block">
+    <h2>Calculation Details</h2>
+
+    <table class="details-table">
+        <tr>
+            <td>Created At:</td>
+            <td th:text="${#temporals.format(calc.createdAt, 'yyyy-MM-dd HH:mm:ss')}">timestamp</td>
+        </tr>
+        <tr th:if="${calc.name}">
+            <td>Name:</td>
+            <td th:text="${calc.name}">calc_name</td>
+        </tr>
+        <tr th:if="${calc.description}">
+            <td>Description:</td>
+            <td th:text="${calc.description}">calc_desc</td>
+        </tr>
+        <tr th:if="${calc.type}">
+            <td>Type:</td>
+            <td th:text="${calc.type}">calc_type</td>
+        </tr>
+    </table>
+
+    <div th:if="${calc.values != null and not #lists.isEmpty(calc.values)}">
+        <h3>Values</h3>
+        <!-- INFO -->
+        <div th:if="${calc.values.?[valueType == 'INFO'].size() > 0}">
+            <div class="value-group-title">Info</div>
+            <table class="values-table">
+                <thead>
+                <tr><th>Name</th><th>Value</th></tr>
+                </thead>
+                <tbody>
+                <tr th:each="val : ${calc.values.?[valueType == 'INFO']}">
+                    <td th:text="${val.name}">Value Name</td>
+                    <td th:text="${val.value}">Value</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <!-- FP -->
+        <div th:if="${calc.values.?[valueType == 'FP'].size() > 0}">
+            <div class="value-group-title">Function Points (FP)</div>
+            <table class="values-table">
+                <thead>
+                <tr><th>Name</th><th>Value</th></tr>
+                </thead>
+                <tbody>
+                <tr th:each="val : ${calc.values.?[valueType == 'FP']}">
+                    <td th:text="${val.name}">Value Name</td>
+                    <td th:text="${val.value}">Value</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <!-- B_COCOMO -->
+        <div th:if="${calc.values.?[valueType == 'B_COCOMO'].size() > 0}">
+            <div class="value-group-title">Basic COCOMO</div>
+            <table class="values-table">
+                <thead>
+                <tr><th>Name</th><th>Value</th></tr>
+                </thead>
+                <tbody>
+                <tr th:each="val : ${calc.values.?[valueType == 'B_COCOMO']}">
+                    <td th:text="${val.name}">Value Name</td>
+                    <td th:text="${val.value}">Value</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <!-- INT_COCOMO -->
+        <div th:if="${calc.values.?[valueType == 'INT_COCOMO'].size() > 0}">
+            <div class="value-group-title">Intermediate COCOMO</div>
+            <table class="values-table">
+                <thead>
+                <tr><th>Name</th><th>Value</th></tr>
+                </thead>
+                <tbody>
+                <tr th:each="val : ${calc.values.?[valueType == 'INT_COCOMO']}">
+                    <td th:text="${val.name}">Value Name</td>
+                    <td th:text="${val.value}">Value</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <!-- Other/Null valueTypes -->
+        <div th:if="${calc.values.?[valueType == null or (valueType != 'INFO' and valueType != 'FP' and valueType != 'B_COCOMO' and valueType != 'INT_COCOMO')].size() > 0}">
+            <div class="value-group-title">Metrics</div>
+            <table class="values-table">
+                <thead>
+                <tr><th>Name</th><th>Value</th></tr>
+                </thead>
+                <tbody>
+                <tr th:each="val : ${calc.values.?[valueType == null or (valueType != 'INFO' and valueType != 'FP' and valueType != 'B_COCOMO' and valueType != 'INT_COCOMO')]}">
+                    <td th:text="${val.name}">Value Name</td>
+                    <td th:text="${val.value}">Value</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Display Tables -->
+    <div th:if="${calc.tables != null and not #lists.isEmpty(calc.tables)}">
+        <h3>Detailed Tables</h3>
+        <div th:each="table : ${calc.tables}">
+            <h4 th:text="${table.tableName} + ' (RESULT VALUE: ' + ${table.result} + ')'">Table Name</h4>
+            <table class="eaf-table"> <!-- Use a specific class if needed -->
+                <thead>
+                <tr><th>Factor</th><th>Value</th></tr>
+                </thead>
+                <tbody>
+                <tr th:each="tVal : ${table.tableValues}">
+                    <td th:text="${tVal.name}">Factor Name</td>
+                    <!-- Display 'N/A' or similar if value is null -->
+                    <td th:text="${tVal.value != null ? tVal.value : 'N/A'}">Factor Value</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+<div class="footer">
+    Generated on <span th:text="${#dates.format(#dates.createNow(), 'yyyy-MM-dd HH:mm')}"></span>
+</div>
+
+</body>
+</html>
