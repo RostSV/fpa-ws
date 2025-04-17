@@ -85,21 +85,86 @@
             font-size: 0.8em;
             color: #777;
         }
+        .header-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            background-color: rgba(52, 109, 74, 0.25);
+            border: 2px solid  rgb(52 109 74);
+        }
+
+        .header-table td {
+            padding: 10px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .header-table td:first-child {
+            width: 150px;
+            text-align: right;
+            color:  rgb(52 109 74);
+        }
     </style>
 </head>
 <body>
 
-<div id="header" style="position:relative;">
+<div id="header" style="display: flex; justify-content: center">
     <img th:if="${logoImageBase64 != null and !logoImageBase64.isEmpty()}"
          th:src="'data:image/png;base64,' + ${logoImageBase64}"
          alt="Logo"/>
-     <span style="font-size: 1.6em; font-weight: bold; margin-left: 15px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: rgb(52 109 74);">CALCULATION REPORT</span>
+     <h1 style="color: rgb(52 109 74);">CALCULATION REPORT</h1>
+</div>
+
+<!--Group Info-->
+<div th:if="${group != null}">
+    <div class="header-table">
+        <table>
+            <tr th:if="${group.name}">
+                <td>Name:</td>
+                <td th:text="${group.name}">group_name</td>
+            </tr>
+            <tr th:if="${group.type}">
+                <td>Type:</td>
+                <td th:text="${group.type}">group_type</td>
+            </tr>
+            <tr>
+                <td>Created At:</td>
+                <td th:text="${#temporals.format(group.createdAt, 'yyyy-MM-dd HH:mm:ss')}">timestamp</td>
+            </tr>
+            <tr th:if="${group.description}">
+                <td>Description:</td>
+                <td th:text="${group.description}">group_desc</td>
+            </tr>
+        </table>
+    </div>
+</div>
+<!--Single Calculation Info-->
+<div th:if="${group == null}">
+    <div class="header-table">
+        <table>
+            <tr th:if="${calculations[0].name}">
+                <td>Name:</td>
+                <td th:text="${calculations[0].name}">calc_name</td>
+            </tr>
+            <tr th:if="${calculations[0].type}">
+                <td>Type:</td>
+                <td th:text="${calculations[0].type}">calc_type</td>
+            </tr>
+            <tr>
+                <td>Created At:</td>
+                <td th:text="${#temporals.format(calculations[0].createdAt, 'yyyy-MM-dd HH:mm:ss')}">timestamp</td>
+            </tr>
+            <tr th:if="${calculations[0].description}">
+                <td>Description:</td>
+                <td th:text="${calculations[0].description}">calc_desc</td>
+            </tr>
+        </table>
+    </div>
 </div>
 
 <div th:each="calc, iterStat : ${calculations}" class="calculation-block">
-    <h2>Calculation Details</h2>
-
-    <table class="details-table">
+    <h2 th:text="${#strings.concat('Calculation', calc.name != null ? ' (' + calc.name + ')' : '', ' - ', iterStat.index + 1)}">Calculation Details</h2>
+    <table th:if="${group == null}" class="details-table">
         <tr>
             <td>Created At:</td>
             <td th:text="${#temporals.format(calc.createdAt, 'yyyy-MM-dd HH:mm:ss')}">timestamp</td>
@@ -119,7 +184,6 @@
     </table>
 
     <div th:if="${calc.values != null and not #lists.isEmpty(calc.values)}">
-        <h3>Values</h3>
         <!-- INFO -->
         <div th:if="${calc.values.?[valueType == 'INFO'].size() > 0}">
             <div class="value-group-title">Info</div>
