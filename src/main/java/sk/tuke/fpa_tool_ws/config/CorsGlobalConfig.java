@@ -16,8 +16,7 @@ public class CorsGlobalConfig {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
         config.setAllowedOrigins(List.of(
-                "https://nice-cliff-009d4c303.6.azurestaticapps.net",
-                "https://nice-cliff-009d4c303-preview.westeurope.6.azurestaticapps.net",
+                "https://fp-learn.xyz",
                 "http://localhost:4200"
         ));
         config.setAllowedHeaders(List.of("*"));
