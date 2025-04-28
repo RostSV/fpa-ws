@@ -52,6 +52,21 @@ public class ExcelReaderServiceImpl implements ExcelReaderService {
         }
     }
 
+    @Override
+    public List<List<CalculationDto>> readCalculationsFromFiles(MultipartFile[] files) throws IOException {
+        List<List<CalculationDto>> calculationDtos = new ArrayList<>();
+        for(MultipartFile file: files){
+            ExcelFileValidator.validateExcel(file);
+
+            Collection<CalculationDto> calculations = new ArrayList<>();
+            for(List<CalculationValue> values : readFile(file)){
+                calculations.add(CalculationMapper.getEmptyCalculationDtoWithValues(values));
+            }
+            calculationDtos.add(new ArrayList<>(calculations));
+        }
+        return calculationDtos;
+    }
+
     private List<List<CalculationValue>> readFile(MultipartFile file) throws IOException {
         List<String> headers;
         List<List<CalculationValue>> calculationValues = new ArrayList<>();
