@@ -51,7 +51,7 @@ public class CompareServiceImpl implements CompareService {
         List<CalculationDto> group2 = groupsOfCalculations.get(1);
 
         double similarity = compareCalculationGroups(group1, group2);
-        similarity = Math.round(similarity * 100.0) / 100.0;
+        similarity = Math.round(similarity * 100.0);
 
         CalculationCompareResult compareResult = new CalculationCompareResult();
         compareResult.setFile1Name(files[0].getOriginalFilename());
@@ -69,7 +69,8 @@ public class CompareServiceImpl implements CompareService {
                 .map(compareResult -> new CalculationCompareResultDto(
                         compareResult.getFile1Name(),
                         compareResult.getFile2Name(),
-                        compareResult.getSimilarity()))
+                        compareResult.getSimilarity(),
+                        Date.from(compareResult.getCreatedAt())))
                 .collect(Collectors.toList());
     }
 

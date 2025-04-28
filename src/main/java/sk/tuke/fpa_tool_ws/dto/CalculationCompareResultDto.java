@@ -1,14 +1,18 @@
 package sk.tuke.fpa_tool_ws.dto;
 
+import java.util.Date;
+
 public class CalculationCompareResultDto {
     private String file1Name;
     private String file2Name;
     private double similarity;
+    private Date date;
 
-    public CalculationCompareResultDto(String file1Name, String file2Name, double similarity) {
+    public CalculationCompareResultDto(String file1Name, String file2Name, double similarity, Date date) {
         this.file1Name = file1Name;
         this.file2Name = file2Name;
         this.similarity = similarity;
+        this.date = date;
     }
 
     public double getSimilarity() {
@@ -33,5 +37,13 @@ public class CalculationCompareResultDto {
 
     public void setFile1Name(String file1Name) {
         this.file1Name = file1Name;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
     }
 }
