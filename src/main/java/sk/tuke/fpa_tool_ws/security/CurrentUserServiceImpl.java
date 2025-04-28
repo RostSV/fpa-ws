@@ -11,9 +11,13 @@ public class CurrentUserServiceImpl implements CurrentUserService {
     @Override
     public String getUserId() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(authentication != null){
-            CustomUserDetails principal = (CustomUserDetails) authentication.getPrincipal();
-            return principal.getUserId();
+        if (authentication != null) {
+            Object principal = authentication.getPrincipal();
+            if (principal instanceof CustomUserDetails) {
+                return ((CustomUserDetails) principal).getUserId();
+            } else {
+                throw new SecurityException("Authentication principal is not of type CustomUserDetails. Try check authentication token.");
+            }
         }
         return null;
     }

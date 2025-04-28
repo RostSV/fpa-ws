@@ -2,24 +2,29 @@ package sk.tuke.fpa_tool_ws.service.impl;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import sk.tuke.fpa_tool_ws.dto.CalculationCompareResultDto;
 import sk.tuke.fpa_tool_ws.dto.CalculationDto;
+import sk.tuke.fpa_tool_ws.model.CalculationCompareResult;
+import sk.tuke.fpa_tool_ws.repository.CalculationCompareRepository;
+import sk.tuke.fpa_tool_ws.security.CurrentUserService;
 import sk.tuke.fpa_tool_ws.service.CompareService;
 import sk.tuke.fpa_tool_ws.service.ExcelReaderService;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 public class CompareServiceImpl implements CompareService {
 
     private final ExcelReaderService excelReaderService;
+    private final CurrentUserService currentUserService;
+    private final CalculationCompareRepository calculationCompareRepository;
 
-    public CompareServiceImpl(ExcelReaderService excelReaderService) {
+    public CompareServiceImpl(ExcelReaderService excelReaderService, CurrentUserService currentUserService, CalculationCompareRepository calculationCompareRepository) {
         this.excelReaderService = excelReaderService;
+        this.currentUserService = currentUserService;
+        this.calculationCompareRepository = calculationCompareRepository;
     }
 
     /**
@@ -45,7 +50,27 @@ public class CompareServiceImpl implements CompareService {
         List<CalculationDto> group1 = groupsOfCalculations.get(0);
         List<CalculationDto> group2 = groupsOfCalculations.get(1);
 
-        return compareCalculationGroups(group1, group2) * 100;
+        double similarity = compareCalculationGroups(group1, group2);
+        similarity = Math.round(similarity * 100.0) / 100.0;
+
+        CalculationCompareResult compareResult = new CalculationCompareResult();
+        compareResult.setFile1Name(files[0].getOriginalFilename());
+        compareResult.setFile2Name(files[1].getOriginalFilename());
+        compareResult.setSimilarity(similarity);
+
+        calculationCompareRepository.save(compareResult);
+
+        return similarity;
+    }
+
+    @Override
+    public Collection<CalculationCompareResultDto> getCompareHistory() {
+        return calculationCompareRepository.findByCreatedBy(currentUserService.getUserId()).stream()
+                .map(compareResult -> new CalculationCompareResultDto(
+                        compareResult.getFile1Name(),
+                        compareResult.getFile2Name(),
+                        compareResult.getSimilarity()))
+                .collect(Collectors.toList());
     }
 
     /**

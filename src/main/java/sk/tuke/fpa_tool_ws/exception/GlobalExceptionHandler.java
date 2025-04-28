@@ -11,6 +11,13 @@ import sk.tuke.fpa_tool_ws.dto.ApiResponse;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    @ExceptionHandler(SecurityException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ResponseEntity<ApiResponse<String>> handleSecurityException(SecurityException ex) {
+        ApiResponse<String> response = new ApiResponse<>(401, ex.getMessage(), null);
+        return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
+    }
+
     @ExceptionHandler(CalculationNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ResponseEntity<ApiResponse<String>> handleCalculationNotFound(CalculationNotFoundException ex) {
