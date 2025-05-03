@@ -274,7 +274,7 @@
                 <tr th:each="tVal : ${table.tableValues}">
                     <td th:text="${tVal.name}">Factor Name</td>
                     <!-- Display 'N/A' or similar if value is null -->
-                    <td th:text="${tVal.value != null ? tVal.value : 'N/A'}">Factor Value</td>
+                    <td th:text="${tVal['value'] != null ? tVal['value'] : 'N/A'}">Value</td>
                 </tr>
                 </tbody>
             </table>
