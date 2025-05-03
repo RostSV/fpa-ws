@@ -1,6 +1,9 @@
 package sk.tuke.fpa_tool_ws.service.impl;
 
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import sk.tuke.fpa_tool_ws.dto.CalculationDto;
 import sk.tuke.fpa_tool_ws.dto.CalculationGroupDto;
@@ -20,7 +23,6 @@ import sk.tuke.fpa_tool_ws.security.CurrentUserService;
 import sk.tuke.fpa_tool_ws.service.CalculationService;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -73,9 +75,27 @@ public class CalculationServiceImpl implements CalculationService {
     }
 
     @Override
-    public Collection<CalculationDto> getCalculations() {
-        return CalculationMapper.toCalculationDtoCollection(calculationRepository.findByCreatedByAndSourceType(currentUserService.getUserId(), CalculationSourceType.CREATED));
+    public Collection<CalculationDto> getCalculations(String count) {
+        Pageable pageable;
+
+        try {
+            pageable = (count != null && !count.isEmpty())
+                    ? PageRequest.of(0, Integer.parseInt(count))
+                    : Pageable.unpaged();
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Invalid count value: " + count, e);
+        }
+
+        Collection<Calculation> calculations = calculationRepository
+                .findByCreatedByAndSourceTypeOrderByCreatedAtDesc(
+                        currentUserService.getUserId(),
+                        CalculationSourceType.CREATED,
+                        pageable
+                ).getContent();
+
+        return CalculationMapper.toCalculationDtoCollection(calculations);
     }
+
 
     @Override
     public CalculationGroup createGroupCalculation(Info calculationInfo, CalculationGroupType type) {
@@ -124,7 +144,7 @@ public class CalculationServiceImpl implements CalculationService {
 
     @Override
     public Collection<CalculationDto> getImportedCalculations() {
-        return CalculationMapper.toCalculationDtoCollection(calculationRepository.findByCreatedByAndSourceType(currentUserService.getUserId(), CalculationSourceType.IMPORTED));
+        return CalculationMapper.toCalculationDtoCollection(calculationRepository.findByCreatedByAndSourceTypeOrderByCreatedAtDesc(currentUserService.getUserId(), CalculationSourceType.IMPORTED));
     }
 
     @Override

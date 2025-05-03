@@ -21,6 +21,7 @@ public class Calculation {
     @CreatedBy
     private String createdBy;
 
+    @Indexed
     @CreatedDate
     private Instant createdAt;
 

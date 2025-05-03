@@ -3,7 +3,6 @@ package sk.tuke.fpa_tool_ws.service;
 import sk.tuke.fpa_tool_ws.dto.CalculationDto;
 import sk.tuke.fpa_tool_ws.dto.CalculationGroupDto;
 import sk.tuke.fpa_tool_ws.enums.CalculationGroupType;
-import sk.tuke.fpa_tool_ws.model.Calculation;
 import sk.tuke.fpa_tool_ws.model.CalculationGroup;
 import sk.tuke.fpa_tool_ws.model.common.Info;
 
@@ -13,7 +12,7 @@ import java.util.Collection;
 public interface CalculationService {
     Collection<CalculationDto> getCalculationsByUserId(String userId);
 
-    Collection<CalculationDto> getCalculations();
+    Collection<CalculationDto> getCalculations(String count);
 
     CalculationGroup createGroupCalculation(Info calculationInfo, CalculationGroupType type);
 

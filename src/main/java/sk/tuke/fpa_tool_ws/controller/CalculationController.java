@@ -21,8 +21,8 @@ public class CalculationController {
 
     @PreAuthorize("hasAnyRole('ADMIN','TEACHER','STUDENT')")
     @GetMapping
-    public ApiResponse<Collection<CalculationDto>> getCalculations() {
-        Collection<CalculationDto> result = this.calculationService.getCalculations();
+    public ApiResponse<Collection<CalculationDto>> getCalculations(@RequestParam (required = false) String count) {
+        Collection<CalculationDto> result = this.calculationService.getCalculations(count);
         return new ApiResponse<>(200, "Calculations retrieved successfully", result);
     }
 
