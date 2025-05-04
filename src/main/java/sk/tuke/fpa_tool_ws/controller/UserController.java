@@ -26,7 +26,7 @@ public class UserController {
         return new ApiResponse<>(200, "Users retrieved successfully", users);
     }
 
-//    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/register")
     public ApiResponse<User> registerUser(@RequestBody UserRegisterRequest payload) {
         userService.createUser(payload);

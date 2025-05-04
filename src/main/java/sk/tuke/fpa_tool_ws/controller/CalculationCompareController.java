@@ -1,5 +1,6 @@
 package sk.tuke.fpa_tool_ws.controller;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import sk.tuke.fpa_tool_ws.dto.ApiResponse;
@@ -19,12 +20,14 @@ public class CalculationCompareController {
         this.compareService = compareService;
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN','TEACHER')")
     @PostMapping("/files")
     public ApiResponse<Object> compareFiles(@RequestParam("files") MultipartFile[] files) throws IOException {
         double result = this.compareService.compareFiles(files);
         return new ApiResponse<>(200, "Files compared successfully", result);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN','TEACHER')")
     @GetMapping("/history")
     public ApiResponse<Collection<CalculationCompareResultDto>> getCompareHistory(){
         return new ApiResponse<>(200, "Compare history retrieved", this.compareService.getCompareHistory());

@@ -1,10 +1,10 @@
 package sk.tuke.fpa_tool_ws.controller;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import sk.tuke.fpa_tool_ws.dto.ApiResponse;
 import sk.tuke.fpa_tool_ws.dto.CalculationDto;
 import sk.tuke.fpa_tool_ws.dto.CalculationGroupDto;
-import sk.tuke.fpa_tool_ws.model.CalculationGroup;
 import sk.tuke.fpa_tool_ws.service.CalculationService;
 import sk.tuke.fpa_tool_ws.service.PdfGeneratorService;
 
@@ -24,6 +24,7 @@ public class ReportController {
         this.calculationService = calculationService;
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN','TEACHER','STUDENT')")
     @PostMapping("/generate-report/calculation/{calculationId}/pdf")
     public ApiResponse<byte[]> generatePdfReport(@PathVariable String calculationId) throws IOException {
         CalculationDto calculation = this.calculationService.getCalculationById(calculationId);
@@ -35,6 +36,7 @@ public class ReportController {
         return new ApiResponse<>(200, "Pdf successfully generated", result);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN','TEACHER','STUDENT')")
     @PostMapping("/generate-report/group/{groupId}/pdf")
     public ApiResponse<byte[]> generatePdfReportGroup(@PathVariable String groupId) throws IOException {
         Collection<CalculationDto> calculation = this.calculationService.getCalculationsByGroupId(groupId);
