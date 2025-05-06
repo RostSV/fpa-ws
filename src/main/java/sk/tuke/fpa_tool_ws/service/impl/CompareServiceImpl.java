@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import sk.tuke.fpa_tool_ws.dto.CalculationCompareResultDto;
 import sk.tuke.fpa_tool_ws.dto.CalculationDto;
+import sk.tuke.fpa_tool_ws.mapper.CompareMapper;
 import sk.tuke.fpa_tool_ws.model.CalculationCompareResult;
 import sk.tuke.fpa_tool_ws.repository.CalculationCompareRepository;
 import sk.tuke.fpa_tool_ws.security.CurrentUserService;
@@ -36,7 +37,7 @@ public class CompareServiceImpl implements CompareService {
      * @throws IllegalArgumentException if the number of files is not exactly two.
      */
     @Override
-    public double compareFiles(MultipartFile[] files) throws IOException {
+    public CalculationCompareResultDto compareFiles(MultipartFile[] files) throws IOException {
         if (files == null || files.length != 2) {
             throw new IllegalArgumentException("Exactly two files are required for comparison.");
         }
@@ -60,17 +61,13 @@ public class CompareServiceImpl implements CompareService {
 
         calculationCompareRepository.save(compareResult);
 
-        return similarity;
+        return CompareMapper.toDto(compareResult);
     }
 
     @Override
     public Collection<CalculationCompareResultDto> getCompareHistory() {
-        return calculationCompareRepository.findByCreatedBy(currentUserService.getUserId()).stream()
-                .map(compareResult -> new CalculationCompareResultDto(
-                        compareResult.getFile1Name(),
-                        compareResult.getFile2Name(),
-                        compareResult.getSimilarity(),
-                        Date.from(compareResult.getCreatedAt())))
+        return calculationCompareRepository.findByCreatedByOrderByCreatedAtDesc(currentUserService.getUserId()).stream()
+                .map(CompareMapper::toDto)
                 .collect(Collectors.toList());
     }
 

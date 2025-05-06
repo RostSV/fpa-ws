@@ -22,8 +22,8 @@ public class CalculationCompareController {
 
     @PreAuthorize("hasAnyRole('ADMIN','TEACHER')")
     @PostMapping("/files")
-    public ApiResponse<Object> compareFiles(@RequestParam("files") MultipartFile[] files) throws IOException {
-        double result = this.compareService.compareFiles(files);
+    public ApiResponse<CalculationCompareResultDto> compareFiles(@RequestParam("files") MultipartFile[] files) throws IOException {
+        CalculationCompareResultDto result = this.compareService.compareFiles(files);
         return new ApiResponse<>(200, "Files compared successfully", result);
     }
 

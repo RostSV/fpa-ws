@@ -17,6 +17,7 @@ public class CalculationCompareResult {
     @CreatedBy
     private String createdBy;
 
+    @Indexed
     @CreatedDate
     private Instant createdAt;
 

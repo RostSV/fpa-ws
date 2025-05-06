@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.Collection;
 
 public interface CompareService {
-    double compareFiles(MultipartFile[] files) throws IOException;
+    CalculationCompareResultDto compareFiles(MultipartFile[] files) throws IOException;
 
     Collection<CalculationCompareResultDto> getCompareHistory();
 }

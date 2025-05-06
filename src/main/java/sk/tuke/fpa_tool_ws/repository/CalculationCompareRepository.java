@@ -8,5 +8,5 @@ import java.util.Collection;
 
 @Repository
 public interface CalculationCompareRepository extends MongoRepository<CalculationCompareResult, String> {
-    Collection<CalculationCompareResult> findByCreatedBy(String userId);
+    Collection<CalculationCompareResult> findByCreatedByOrderByCreatedAtDesc(String userId);
 }
